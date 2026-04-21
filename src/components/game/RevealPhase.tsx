@@ -85,7 +85,15 @@ export default function RevealPhase({ gameState, updateGameState }: Props) {
             
             <p className="text-slate-300 text-center">
               {isImpostor ? (
-                "Berbaurlah dan coba tebak apa kata rahasianya."
+                <>
+                  Berbaurlah dan coba tebak apa kata rahasianya.
+                  {gameState.gameMode === "with_clue" && gameState.secretCategory && (
+                    <span className="block mt-3 text-sm border-t border-red-500/30 pt-2">
+                      Clue Kategori: <br />
+                      <strong className="text-white text-base">{gameState.secretCategory}</strong>
+                    </span>
+                  )}
+                </>
               ) : (
                 <>Kata Rahasia: <span className="font-bold text-white text-lg block mt-2 tracking-wider">{gameState.secretWord}</span></>
               )}

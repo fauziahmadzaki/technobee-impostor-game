@@ -10,8 +10,8 @@ interface Props {
 }
 
 export default function ResultPhase({ gameState, resetGame }: Props) {
-  const isCorrect = gameState.selectedImpostorGuess !== null && 
-                    gameState.impostorIndices.includes(gameState.selectedImpostorGuess);
+  const isCorrect = gameState.selectedImpostorGuesses.length === gameState.impostorsCount && 
+                    gameState.selectedImpostorGuesses.every(g => gameState.impostorIndices.includes(g));
   const didInit = useRef(false);
 
   useEffect(() => {

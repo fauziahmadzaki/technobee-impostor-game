@@ -15,8 +15,11 @@ export interface GameState {
   impostorsCount: number;
   impostorIndices: number[];
   secretWord: string | null;
+  secretCategory: string | null;
+  gameMode: "with_clue" | "no_clue";
+  selectedCategoryConfig: string; // the option user picked (e.g. "Acak" or "Hewan")
   currentPlayerIndex: number;
-  selectedImpostorGuess: number | null;
+  selectedImpostorGuesses: number[];
 }
 
 const initialState: GameState = {
@@ -25,8 +28,11 @@ const initialState: GameState = {
   impostorsCount: 1,
   impostorIndices: [],
   secretWord: null,
+  secretCategory: null,
+  gameMode: "no_clue",
+  selectedCategoryConfig: "Acak",
   currentPlayerIndex: 0,
-  selectedImpostorGuess: null,
+  selectedImpostorGuesses: [],
 };
 
 export default function Home() {

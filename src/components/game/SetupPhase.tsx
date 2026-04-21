@@ -1,6 +1,6 @@
-import { Users, UserMinus, Info, ChevronDown, ChevronUp } from "lucide-react";
+import { Users, UserMinus, Info, ChevronDown, ChevronUp, BookOpen, Fingerprint } from "lucide-react";
 import { GameState } from "@/app/page";
-import { getRandomWord } from "@/lib/words";
+import { getRandomWordAndCategory, CATEGORIES } from "@/lib/words";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
@@ -14,7 +14,7 @@ export default function SetupPhase({ gameState, updateGameState }: Props) {
   const maxImpostors = Math.max(1, Math.floor((gameState.playersCount - 1) / 2));
 
   const handleStart = () => {
-    const word = getRandomWord();
+    const { word, categoryName } = getRandomWordAndCategory(gameState.selectedCategoryConfig);
     
     // Generate unique random indices for impostors
     const indices = new Set<number>();
@@ -25,6 +25,7 @@ export default function SetupPhase({ gameState, updateGameState }: Props) {
     updateGameState({
       phase: "reveal",
       secretWord: word,
+      secretCategory: categoryName,
       impostorIndices: Array.from(indices),
       currentPlayerIndex: 0,
     });
@@ -155,6 +156,62 @@ export default function SetupPhase({ gameState, updateGameState }: Props) {
               +
             </button>
           </div>
+        </div>
+        <div className="h-px w-full bg-slate-700/50"></div>
+
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-3 text-slate-300">
+            <BookOpen size={20} className="text-blue-400" />
+            <span className="font-medium">Kategori Kata</span>
+          </div>
+          <select 
+            value={gameState.selectedCategoryConfig}
+            onChange={(e) => updateGameState({ selectedCategoryConfig: e.target.value })}
+            className="w-full bg-slate-700/50 border border-slate-600 rounded-xl p-3 text-white appearance-none outline-none focus:border-indigo-500 transition-colors"
+          >
+            <option value="Acak">🎲 Acak Semua Kategori</option>
+            {Object.keys(CATEGORIES).map(cat => (
+              <option key={cat} value={cat}>
+                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="h-px w-full bg-slate-700/50"></div>
+
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-3 text-slate-300">
+            <Fingerprint size={20} className="text-emerald-400" />
+            <span className="font-medium">Mode Impostor</span>
+          </div>
+          <div className="flex bg-slate-700/50 rounded-xl p-1 border border-slate-600">
+            <button
+              onClick={() => updateGameState({ gameMode: "no_clue" })}
+              className={`flex-1 py-2 rounded-lg font-medium text-sm transition-all ${
+                gameState.gameMode === "no_clue" 
+                  ? "bg-slate-800 text-white shadow" 
+                  : "text-slate-400 hover:text-slate-300"
+              }`}
+            >
+              Tanpa Clue
+            </button>
+            <button
+              onClick={() => updateGameState({ gameMode: "with_clue" })}
+              className={`flex-1 py-2 rounded-lg font-medium text-sm transition-all ${
+                gameState.gameMode === "with_clue" 
+                  ? "bg-emerald-600/50 text-white shadow" 
+                  : "text-slate-400 hover:text-slate-300"
+              }`}
+            >
+              Dengan Clue Mode
+            </button>
+          </div>
+          <p className="text-xs text-slate-400 text-center">
+            {gameState.gameMode === "no_clue" 
+              ? "Impostor tidak mendapat petunjuk apapun." 
+              : "Impostor diberitahu Kategori dari kata rahasia."}
+          </p>
         </div>
       </div>
 

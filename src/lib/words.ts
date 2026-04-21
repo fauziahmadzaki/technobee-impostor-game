@@ -32,8 +32,19 @@ export const getAllWords = () => {
   return Object.values(CATEGORIES).flat();
 };
 
-export const getRandomWord = () => {
-  const allWords = getAllWords();
-  const randomIndex = Math.floor(Math.random() * allWords.length);
-  return allWords[randomIndex];
+export const getRandomWordAndCategory = (selectedCategory: string) => {
+  let categoryKey = selectedCategory.toLowerCase();
+  
+  if (selectedCategory === "Acak" || !CATEGORIES[categoryKey as keyof typeof CATEGORIES]) {
+    const keys = Object.keys(CATEGORIES);
+    categoryKey = keys[Math.floor(Math.random() * keys.length)];
+  }
+
+  const words = CATEGORIES[categoryKey as keyof typeof CATEGORIES];
+  const word = words[Math.floor(Math.random() * words.length)];
+  
+  // Format category to title case for display (e.g., "hewan" -> "Hewan")
+  const categoryName = categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1);
+  
+  return { word, categoryName };
 };
